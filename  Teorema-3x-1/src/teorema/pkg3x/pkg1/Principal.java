@@ -1,5 +1,4 @@
 package teorema.pkg3x.pkg1;
-import java.util.HashMap;
 import java.math.BigInteger;
 import java.util.Scanner;
 
