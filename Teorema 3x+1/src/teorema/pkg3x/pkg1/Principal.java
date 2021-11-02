@@ -26,8 +26,9 @@ public class Principal {
         
         if (Metodo==2) {
             creadorHilosRangos(NumHilos);
-        }else if(Metodo==2){
-            
+        }else if(Metodo==1){
+            creadorHilosDe1En1(NumHilos);
+            //Aqui hace todos los sout que pide el enunciado
         }
         
     }// InterfazUsuario()
@@ -41,5 +42,19 @@ public class Principal {
             hilos[i].start();
         }
     }// creadorHilosRangos()
-    
+    private static void creadorHilosDe1En1(int numHilos){
+        Datos_De_Uno_En_Uno datos = new Datos_De_Uno_En_Uno(Inicio,Fin);
+        Thread[] hilos = new Thread[numHilos];
+        for (int i = 0; i < hilos.length; ++i) {
+            Hilo_De_Uno_En_Uno h = new Hilo_De_Uno_En_Uno(datos);
+            hilos[i] = new Thread(h);
+            hilos[i].start();
+        }
+        for (int i = 0; i < hilos.length; ++i) {
+            try {
+                hilos[i].join();
+            } catch (InterruptedException e) {}
+        }
+        
+    }// creadorHiloDe1En1
 }// Principal

@@ -4,13 +4,16 @@ import java.math.BigInteger;
 
 public class Hilo_De_Uno_En_Uno implements Runnable {
     Datos_De_Uno_En_Uno Datos;
+
+    public Hilo_De_Uno_En_Uno(Datos_De_Uno_En_Uno Datos) {
+        this.Datos = Datos;
+    }
     
     @Override
     public void run(){
-        int i = 0;
-        BigInteger Numero = Datos.PedirNumero(i);
+        BigInteger Numero = Datos.PedirNumero();
         BigInteger DOS = new BigInteger("2");
-        BigInteger Remainder;
+        BigInteger TRES = new BigInteger("3");
         //Bucle que te pide numeros haste que la clase datos te devuelve 0; es decir que ya se acabaron lso numeros para calcular
         //     |
         //     v
@@ -20,17 +23,27 @@ public class Hilo_De_Uno_En_Uno implements Runnable {
             //     |
             //     v
             while(Numero.compareTo(BigInteger.ONE) == 0){
-                Remainder=  Numero.mod(DOS);
-                //Aqui comprobar si esta ya calculado 
-                if(Remainder ==  BigInteger.ZERO ){
-                    //si es par 
-
+                BigInteger NuevoValor;
+                //Aqui comprobar si esta ya calculado
+                if(!Datos.EstaCalculado(Numero)){
+                    
+                    if(Numero.remainder(DOS)==BigInteger.ZERO ){
+                        //si es par 
+                        NuevoValor = Numero.divide(DOS);
+                    }else{
+                        //si es Impar
+                        NuevoValor = (Numero.multiply(TRES).add(BigInteger.ONE));
+                    }
+                    //Guardar Aqui en el has-map el Numero y el NuevoValor
+                    Datos.SetNuevoNumeroRecienCalculado(Numero,NuevoValor);
+                    
                 }else{
-                    //si es Impar
+                    //Si ya esta calculado recoje del hasmap ese valor y no lo calcula
+                    NuevoValor = Datos.GetNumCalculado(Numero);
                 }
+                Numero = NuevoValor;
             }
-            ++i;
-            Numero = Datos.PedirNumero(i);
+            Numero = Datos.PedirNumero();
         }
         
         
