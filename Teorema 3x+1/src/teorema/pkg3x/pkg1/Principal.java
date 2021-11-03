@@ -5,14 +5,10 @@ import java.util.Scanner;
 public class Principal {
     private static BigInteger Inicio; 
     private static BigInteger Fin;
-    public static void main(String[] args) {
-         InterfazUsuario();
-    }// main()
     
-    private static void InterfazUsuario(){
+    public static void main(String[] args) {
         int Metodo;
         int NumHilos;
-        
         Scanner teclado = new Scanner(System.in);
         System.out.println("Bienvenido al programa calculadora de casos del Teorema 3x+1");
         System.out.println("Que cantiad de hilos quiere utilizar");
@@ -30,8 +26,7 @@ public class Principal {
             creadorHilosDe1En1(NumHilos);
             //Aqui hace todos los sout que pide el enunciado
         }
-        
-    }// InterfazUsuario()
+    }// main()
     
     private static void creadorHilosRangos(int numHilos) {
         DatosRangos datos=new DatosRangos(Inicio, Fin, numHilos);
