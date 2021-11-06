@@ -1,35 +1,56 @@
 package teorema.pkg3x.pkg1;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 
 public class HiloRangos implements Runnable {
     private BigInteger inicioRango;
     private BigInteger finRango;
     private DatosRangos datos;
-
+    private BigInteger DOS=new BigInteger("2");
+    private BigInteger TRES=new BigInteger("3");
+    private static String secuencia="";
+    
     public HiloRangos(DatosRangos datos) {
         this.datos = datos;
     }
 
     @Override
     public void run(){
-        //Los hilos envian un mensaje de inicio y fin para
-        //controlar que dos hilos no tengan el mismo inicio
-        inicioRango=datos.repartidor("inicio");
-        finRango=datos.repartidor("fin");
-        BigInteger resultado = null;
-        int compare=inicioRango.compareTo(finRango);
-        for (BigInteger i=inicioRango; compare==-1; i=i.add(BigInteger.ONE)) {
-            if (!datos.calculados(i)){
-                if (i.remainder(BigInteger.ONE.add(BigInteger.ONE))==BigInteger.ZERO){
-                    resultado=i.divide(BigInteger.ONE.add(BigInteger.ONE));
+        inicioRango=datos.pedirInicio();
+        finRango=datos.pedirFin(inicioRango);
+        BigInteger resultado;
+        for (BigInteger i = inicioRango; i.compareTo(finRango)==-1 || i.compareTo(finRango)==0; i=i.add(BigInteger.ONE)) {
+            String secuenciaMasLarga = "";
+            HashMap <BigInteger, BigInteger> repetido = new HashMap ();
+            resultado=i;
+            while (repetido.get(resultado) == null) {
+                BigInteger numActual=resultado;
+                if (datos.calculados(numActual)==false) {
+                    if (numActual.remainder(DOS)==BigInteger.ZERO){
+                        resultado=numActual.divide(DOS);
+                    }else{
+                        resultado=(numActual.multiply(TRES)).add(BigInteger.ONE);
+                    }
                 }else{
-                    resultado=(i.multiply(BigInteger.ONE.add(BigInteger.ONE).add(BigInteger.ONE))).add(BigInteger.ONE);
+                    resultado=datos.getValor(resultado);
                 }
+                secuenciaMasLarga+=resultado+"-";
+                datos.actualizarCalculados(numActual, resultado);
+                repetido.put(numActual, resultado);
             }
-            System.out.println(""+Thread.currentThread()+inicioRango+"-"+finRango+" "+resultado);
-            compare=i.compareTo(finRango);
+            datos.secuenciaMasLarga(secuenciaMasLarga);
         }
+        datos.end();
     }// run()
+    
+    private void secuenciaMasLarga(BigInteger i, String fin) {
+        if ("mas".equals(fin)){
+            secuencia+=i.toString()+"-";
+        }else if("fin".equals(fin)){
+            datos.secuenciaMasLarga(secuencia);
+            secuencia="";
+        }
+    }// secuenciaMasLarga()
     
 }// HiloRangos
