@@ -45,11 +45,18 @@ public class Principal {
             hilos[i] = new Thread(h);
             hilos[i].start();
         }
+        Long InicioTiempo = System.currentTimeMillis();
         for (int i = 0; i < hilos.length; ++i) {
             try {
                 hilos[i].join();
             } catch (InterruptedException e) {}
         }
+        Long FinTiempo = System.currentTimeMillis();
+        long TiempoEnEjecucion = FinTiempo - InicioTiempo; 
+        System.out.println("Tiempor de Proceso: "+ TiempoEnEjecucion+"\n");
+        System.out.println("Secuandia mas largar: ");
+        System.out.println("Su longitud es: ");
+        System.out.println("El numero mas alto alcanzado es: "+ datos.getNumMasAlto());
         
     }// creadorHiloDe1En1
 }// Principal
