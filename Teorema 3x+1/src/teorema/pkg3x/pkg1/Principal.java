@@ -53,10 +53,11 @@ public class Principal {
         }
         Long FinTiempo = System.currentTimeMillis();
         long TiempoEnEjecucion = FinTiempo - InicioTiempo; 
-        System.out.println("Tiempor de Proceso: "+ TiempoEnEjecucion+"\n");
-        System.out.println("Secuandia mas largar: ");
-        System.out.println("Su longitud es: ");
-        System.out.println("El numero mas alto alcanzado es: "+ datos.getNumMasAlto());
+        System.out.println("Tiempor de Proceso: "+                          TiempoEnEjecucion + " milisegundos");
+        System.out.println("El numero mas alto alcanzado es: "+             datos.getNumMasAlto());
+        System.out.println("La Longitud de la secuendia mas larga es : "+   datos.getLongiudCadenaMax());
+        System.out.println("La secuendia mas larga es: ");
+        
         
     }// creadorHiloDe1En1
 }// Principal

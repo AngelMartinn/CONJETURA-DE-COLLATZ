@@ -28,41 +28,36 @@ public class Hilo_De_Uno_En_Uno implements Runnable {
             //tambien comprobar el numero mas grande alcanzado a la vez que la secuencia mas grande alcanzada. 
             //     |
             //     v
-            BigInteger NuevoValor = BigInteger.ZERO;
-            while(SecuenciaNumeros.contains(Numero) && EstaCalculadoYa){
-                //Aqui comprobar si esta calculado
-                if(!Datos.EstaCalculado(Numero)){
-                    
-                    if(Numero.remainder(DOS)==BigInteger.ZERO ){
-                        //si es par 
-                        NuevoValor = Numero.divide(DOS);
-                    }else{
-                        //si es Impar
-                        NuevoValor = (Numero.multiply(TRES).add(BigInteger.ONE));
-                    }
-                    //Guardar Aqui en el has-map el Numero y el NuevoValor
-                    ++LongitudCadena;
-                    Datos.SetNuevoNumeroRecienCalculado(Numero,NuevoValor);
-                    //Comprobamos si el nuevo nuemro es mayor al que habiamso calculado con anterioridad
-                    if(Datos.getNumMasAlto().compareTo(NuevoValor) > 0){
-                        Datos.setNumMasAlto(NuevoValor);
-                    }
-                    
-                }else{
-                   //Si ya esta calculado no lo calcula y se salta al siguietne numero 
-                   EstaCalculadoYa = false;
-                   //sumamos a su longitud la longitud ya calculada del numero ya encontrado
-                   LongitudCadena += Datos.getLongiudCadema(NuevoValor);
-                }
-                //Antes de salir del bucle guardando en los hasmaps la longitud de la cadena ya calculada y su valor 
-                Datos.setLongitudCadena(NuevoValor,LongitudCadena);
-                SecuenciaNumeros.add(NuevoValor);
+            BigInteger NuevoValor;
+            while(SecuenciaNumeros.contains(Numero) && !Datos.EstaCalculado(Numero)){
                 
+                if(Numero.remainder(DOS)==BigInteger.ZERO ){
+                    //si es par 
+                    NuevoValor = Numero.divide(DOS);
+                }else{
+                    //si es Impar
+                    NuevoValor = (Numero.multiply(TRES).add(BigInteger.ONE));
+                }
+                //Guardar Aqui en el has-map el Numero y el NuevoValor
+                Datos.SetNuevoNumeroRecienCalculado(Numero,NuevoValor);
+                //Comprobamos si el nuevo nuemro es mayor al que habiamso calculado con anterioridad
+                if(Datos.getNumMasAlto().compareTo(NuevoValor) == -1){
+                    Datos.setNumMasAlto(NuevoValor);
+                }
+                SecuenciaNumeros.add(NuevoValor);
+                //Antes de salir del bucle guardando en los hasmaps la longitud de la cadena ya calculada y su valor
+                ++LongitudCadena;
                 Numero = NuevoValor;
             }
+            
+            if(Datos.hasLongitud(Numero)){
+                LongitudCadena += Datos.getLongiudCadena(Numero);
+            }
+            Datos.setLongitudCadena(Numero,LongitudCadena);
             //Como ya hemos acabado con un numero borramos el array, reiniciamos la longitud de la cadena y pedimos el siguietne numero
             SecuenciaNumeros.removeAll(SecuenciaNumeros);
             LongitudCadena = 0;
+            EstaCalculadoYa = true;
             Numero = Datos.PedirNumero();
         }
         

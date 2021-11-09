@@ -1,6 +1,7 @@
 package teorema.pkg3x.pkg1;
 import java.util.HashMap;
 import java.math.BigInteger;
+import java.util.Iterator;
 
 public class Datos_De_Uno_En_Uno {
     private BigInteger InicioSemillas;
@@ -48,12 +49,33 @@ public class Datos_De_Uno_En_Uno {
         //Guardamos en un hasmap el numero que hemos calculado(key) y la lognitud de su cadena(value)
         LongitudesDeNuemrosCalculados.put(Bigi, i);
     }
-    public int getLongiudCadema(BigInteger i){
+    public int getLongiudCadena(BigInteger i){
         //devolvemos la longitud del numero introducido el cual ya hemos calculado anteriormente y por tanto conocemos tambien la longitud de su cadena
-        int LongitudMayor = LongitudesDeNuemrosCalculados.get(i);
-        return LongitudMayor;
+        int LongitudDeNumero = LongitudesDeNuemrosCalculados.get(i);
+        return LongitudDeNumero;
+    }
+    public int getLongiudCadenaMax(){
+        //devolvemos la longitud del numero introducido el cual ya hemos calculado anteriormente y por tanto conocemos tambien la longitud de su cadena
+        int MaxValue = 0;
+        Iterator it = LongitudesDeNuemrosCalculados.entrySet().iterator();
+        while(it.hasNext()){
+            HashMap.Entry<BigInteger,Integer> entry = (HashMap.Entry)it.next();
+            if(entry.getValue()>=MaxValue){
+                MaxValue = entry.getValue();
+            }else{
+                break;
+            }
+        }
+        return MaxValue;
     }
     
+    public boolean hasLongitud(BigInteger bigi){
+        if(LongitudesDeNuemrosCalculados.containsKey(bigi)){
+            return true;
+        }
+        return false;
+        
+    }
     
     public BigInteger getNumMasAlto(){
         //Devolvemos el numero mas alto alcanzado
