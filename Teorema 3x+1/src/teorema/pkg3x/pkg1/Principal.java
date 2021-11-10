@@ -36,7 +36,18 @@ public class Principal {
             hilos[i] = new Thread(h);
             hilos[i].start();
         }
+        Long InicioTiempo = System.currentTimeMillis();
+        for (int i = 0; i < hilos.length; ++i) {
+            try {
+                hilos[i].join();
+            } catch (InterruptedException e) {}
+        }
+        Long FinTiempo = System.currentTimeMillis();
+        long TiempoEnEjecucion = FinTiempo - InicioTiempo;
+        System.out.println("Tiempo de procesado: "+ TiempoEnEjecucion+" milisegundos");
+        datos.end();
     }// creadorHilosRangos()
+    
     private static void creadorHilosDe1En1(int numHilos){
         Datos_De_Uno_En_Uno datos = new Datos_De_Uno_En_Uno(Inicio,Fin);
         Thread[] hilos = new Thread[numHilos];
@@ -53,10 +64,10 @@ public class Principal {
         }
         Long FinTiempo = System.currentTimeMillis();
         long TiempoEnEjecucion = FinTiempo - InicioTiempo; 
-        System.out.println("Tiempor de Proceso: "+                          TiempoEnEjecucion + " milisegundos");
+        System.out.println("Tiempo de Proceso: "+                          TiempoEnEjecucion + " milisegundos");
         System.out.println("El numero mas alto alcanzado es: "+             datos.getNumMasAlto());
-        System.out.println("La Longitud de la secuendia mas larga es : "+   datos.getLongiudCadenaMax());
-        System.out.println("La secuendia mas larga es: ");
+        System.out.println("La Longitud de la secuencia mas larga es : "+   datos.getLongiudCadenaMax());
+        System.out.println("La secuencia mas larga es: ");
         
         
     }// creadorHiloDe1En1

@@ -9,7 +9,9 @@ public class HiloRangos implements Runnable {
     private DatosRangos datos;
     private BigInteger DOS=new BigInteger("2");
     private BigInteger TRES=new BigInteger("3");
-    private static String secuencia="";
+    private HashMap <BigInteger, BigInteger> repetido = new HashMap ();
+    private String secuencia="";
+    private BigInteger numMax=BigInteger.ZERO;
     
     public HiloRangos(DatosRangos datos) {
         this.datos = datos;
@@ -19,38 +21,36 @@ public class HiloRangos implements Runnable {
     public void run(){
         inicioRango=datos.pedirInicio();
         finRango=datos.pedirFin(inicioRango);
-        BigInteger resultado;
+        BigInteger resultado = BigInteger.ZERO;
+        BigInteger numActual = BigInteger.ZERO;
         for (BigInteger i = inicioRango; i.compareTo(finRango)==-1 || i.compareTo(finRango)==0; i=i.add(BigInteger.ONE)) {
-            String secuenciaMasLarga = "";
-            HashMap <BigInteger, BigInteger> repetido = new HashMap ();
+            secuencia="";
             resultado=i;
+            int contSecuencias=0;
             while (repetido.get(resultado) == null) {
-                BigInteger numActual=resultado;
+                numActual=resultado;
                 if (datos.calculados(numActual)==false) {
                     if (numActual.remainder(DOS)==BigInteger.ZERO){
                         resultado=numActual.divide(DOS);
                     }else{
                         resultado=(numActual.multiply(TRES)).add(BigInteger.ONE);
                     }
+                ++contSecuencias;
                 }else{
-                    resultado=datos.getValor(resultado);
+                    contSecuencias+=datos.getSecuencia(resultado);
                 }
-                secuenciaMasLarga+=resultado+"-";
-                datos.actualizarCalculados(numActual, resultado);
+                secuencia+=numActual+"-";
                 repetido.put(numActual, resultado);
+                if (resultado.compareTo(numMax)==1){
+                    numMax=resultado;
+                }    
             }
-            datos.secuenciaMasLarga(secuenciaMasLarga);
+            secuencia+=resultado;
+            datos.actualizarCalculados(secuencia);
+            datos.secuenciaMasLarga(i, contSecuencias);
+            repetido.clear();
         }
-        datos.end();
+        datos.setNumMax(numMax);
     }// run()
-    
-    private void secuenciaMasLarga(BigInteger i, String fin) {
-        if ("mas".equals(fin)){
-            secuencia+=i.toString()+"-";
-        }else if("fin".equals(fin)){
-            datos.secuenciaMasLarga(secuencia);
-            secuencia="";
-        }
-    }// secuenciaMasLarga()
     
 }// HiloRangos
