@@ -4,25 +4,30 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 public class DatosRangos {
+    private BigInteger finINICIAL;
     private BigInteger inicioRango;
     private BigInteger finRango;
     private int numHilos;
-    private BigInteger numMax=BigInteger.ZERO;
-    private BigInteger reparto;
-    private int despertador=0;
     private int contadorHilos = 0;
-    private BigInteger finINICIAL;
+    private BigInteger reparto;
+    private BigInteger numMax=BigInteger.ZERO;
     private HashMap <BigInteger, BigInteger> calculados = new HashMap ();
+    //Hace la misma funcion que el hashmap de repetidos en los hilos, se usa para
+    //poder sacar la secuencia mas larga parando al llegar a un bucle
+    //y para devolver el resto de la secuencia dado un numero ya calculado
+    private HashMap <BigInteger, BigInteger> repetido = new HashMap ();
     private int longitudSecuenciaMayor=0;
     private BigInteger semillaSecuenciaMayor=BigInteger.ZERO;
     private String secuenciaMayor="";
-    private HashMap <BigInteger, BigInteger> repetido = new HashMap ();
+    private boolean existeNuevoBucle = false;
+    private BigInteger semillaNuevoBucle=BigInteger.ZERO;
             
     public DatosRangos(BigInteger inicioRango, BigInteger finRango, int numHilos) {
         this.inicioRango = inicioRango;
         this.finRango = finRango;
         finINICIAL=finRango;
         this.numHilos = numHilos;
+        //Reparte los numeros que corresponden por hilo
         reparto = (finRango.subtract(inicioRango)).divide(BigInteger.valueOf(numHilos));
     }// DatosRangos()
 
@@ -31,23 +36,32 @@ public class DatosRangos {
     }
 
     public synchronized void setNumMax(BigInteger numMax) {
-        if (numMax.compareTo(this.numMax)==1) {
             this.numMax = numMax;
-        }
     }
     
     public synchronized BigInteger pedirInicio(){
+        //El hilo pide el inicio de su rango, synchronized porque cambio
+        //el valor del inicio del rango para el siguiente hilo
         if (contadorHilos==0) {
             inicioRango=inicioRango;
         }else{
+            //Suma uno al reparto porque si no dos hilos calcularian dos vecs el
+            //mismo numero, el rpimero como el final de su rango y el siguiente como su inicio
             inicioRango=inicioRango.add(reparto).add(BigInteger.ONE);
         }
+        //Contador de hilos para que cuando ya no se el primer hilo vaya al else
         ++contadorHilos;
         return inicioRango;
     }
     
     public BigInteger pedirFin(BigInteger inicio) {
+        //El hilo pide el fin de su rango, no es synchronized porque, a pesar de
+        //que se cambian valores, como recibe por parametro un inicio al que le
+        //suma los numeros necesarios para calcular el fin del rango, nunca va a dar problemas
         if (contadorHilos==numHilos) {
+            //Si es el ultimo hilo el fin de su rango es el fin inicial del rango
+            //que se comenzo a repartir, hecho para evitar que no se llega el
+            //rango solicitado en casos de repartos no igualess
             finRango=finINICIAL;
         }else{
             finRango=inicio.add(reparto);
@@ -64,6 +78,8 @@ public class DatosRangos {
     }// calculados()
     
     public synchronized void actualizarCalculados(String secuencia) {
+        //Recibe un string con una secuencia, separa los numeros y los
+        //mete en el hashmap en su lugar correspondiente
         String[] arraySecuencia=secuencia.split("-");
         BigInteger key;
         BigInteger value = BigInteger.ZERO;
@@ -79,6 +95,7 @@ public class DatosRangos {
     }// actualizarCalculados()
     
     public synchronized int getSecuencia(BigInteger num){
+        //Recibe el numero al que se ha llegado y ya esta calculado del hilo
         int contExtra=0;
         BigInteger numActual;
         while (repetido.get(num)==null) {
@@ -88,6 +105,7 @@ public class DatosRangos {
             repetido.put(numActual, num);
         }
         repetido.clear();
+        //se devuelve el resto de la longitud de la secuencia
         return contExtra;
     }
     
@@ -98,7 +116,13 @@ public class DatosRangos {
         }
     }// secuenciaMasLarga()
     
+    public synchronized void setBucle(boolean nuevoBucle, BigInteger semillaNuevoBucle){
+        existeNuevoBucle=nuevoBucle;
+        this.semillaNuevoBucle=semillaNuevoBucle;
+    }
+    
     public void end(){
+        //Recorre el hashmap con comenzando por la semilla que da lugar a la mas larga
         BigInteger siguienteNum=semillaSecuenciaMayor;
         BigInteger numActual;
         while (repetido.get(siguienteNum)==null) {
@@ -109,12 +133,20 @@ public class DatosRangos {
         }
         
         System.out.println("Semilla de la mayor secuencia encontrada: "+semillaSecuenciaMayor);
-        //El -1 porque sino sacaría la longitud de la secuencia contando con el
-        //numero que se repite(4) generando el bucle 4-2-1 u otro
+        //El -1 es porque sino sacaria la longitud de la secuencia contando con el
+        //numero que se repite(4 o x) que genera el bucle 4-2-1 u otro
         System.out.println("Longitud de la secuencia de "+semillaSecuenciaMayor+": "+(longitudSecuenciaMayor-1));
         //substring para quitar el ultimo - al sacar la secuencia por pantalla
         System.out.println("Secuencia de "+semillaSecuenciaMayor+": "+secuenciaMayor.substring(0, secuenciaMayor.length()-1));
         System.out.println("Numero maximo alcanzado: "+numMax);
+        if (existeNuevoBucle) {
+            System.out.println("Nuevo bucle encontrado!!");
+        }else{
+            System.out.println("No existe nuevo bucle.");
+        }
+        if (!semillaNuevoBucle.equals(BigInteger.ZERO)){
+            System.out.println("Generado por la semilla: "+semillaNuevoBucle);
+        }
     }// end()
     
 }// DatosRangos
