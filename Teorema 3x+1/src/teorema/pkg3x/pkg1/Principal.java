@@ -15,7 +15,7 @@ public class Principal {
         NumHilos = teclado.nextInt();teclado.nextLine();
         System.out.println("Que metodo quieres utilizar:\n \t DeUnoEnUno-1 \n\t SubIntervalos-2");
         Metodo = teclado.nextInt(); teclado.nextLine();
-        System.out.println("Dime el inicio de las señillas a calcular");
+        System.out.println("Dime el inicio de las semillas a calcular");
         Inicio = new BigInteger(teclado.nextLine());
         System.out.println("Por ultimo dime el final de las semillas a calcular");
         Fin= new BigInteger(teclado.nextLine());
@@ -64,10 +64,10 @@ public class Principal {
         }
         Long FinTiempo = System.currentTimeMillis();
         long TiempoEnEjecucion = FinTiempo - InicioTiempo; 
-        System.out.println("Tiempo de Proceso: "+                          TiempoEnEjecucion + " milisegundos");
+        System.out.println("Tiempo de Proceso: "+                           TiempoEnEjecucion + " milisegundos");
         System.out.println("El numero mas alto alcanzado es: "+             datos.getNumMasAlto());
-        System.out.println("La Longitud de la secuencia mas larga es : "+   datos.getLongiudCadenaMax());
-        System.out.println("La secuencia mas larga es: ");
+        System.out.println("La Longitud de la secuencia mas larga es: "+   datos.getLongiudCadenaMax());
+        System.out.println("La secuencia mas larga es: "+                   datos.getCadenaMasLargar());
         
         
     }// creadorHiloDe1En1
