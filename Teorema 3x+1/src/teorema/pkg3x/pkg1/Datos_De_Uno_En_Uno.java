@@ -1,25 +1,23 @@
 package teorema.pkg3x.pkg1;
 import java.util.HashMap;
 import java.math.BigInteger;
-import java.util.Iterator;
+import java.util.ArrayList;
 
 public class Datos_De_Uno_En_Uno {
     private BigInteger InicioSemillas;
     private BigInteger FinSemillas;
     private BigInteger NumMasAlto = BigInteger.ZERO;
     HashMap<BigInteger,BigInteger> NumerosCalculados = new HashMap<>();
-    HashMap<BigInteger,Integer> LongitudesDeNuemrosCalculados = new HashMap<>();
+    ArrayList<BigInteger> CadenaMasLarga = new ArrayList<>();
+    int i = 0;
     
     public Datos_De_Uno_En_Uno(BigInteger InicioSemillas, BigInteger FinSemillas) {
         this.InicioSemillas = InicioSemillas;
         this.FinSemillas = FinSemillas;
     }
-    int i = 0;
     
     public synchronized BigInteger PedirNumero(){
-        BigInteger count = new BigInteger(""+i);
-        BigInteger ACalcular = InicioSemillas.add(count);
-        
+        BigInteger ACalcular = InicioSemillas.add(new BigInteger(""+i));
         if(ACalcular.compareTo(FinSemillas)<= 0){
             ++i;
             return ACalcular;
@@ -28,15 +26,22 @@ public class Datos_De_Uno_En_Uno {
         }
         
     }
-    //HashMap de Nuemro y resultado siguietne
-    public BigInteger GetNumCalculado(BigInteger NumeroYaCalculado){
-        //aqui te coje el valor del hasmap  el cual si esta calculado
-        return BigInteger.ONE;//<---- momentanio para que no pete y compile
-    }
-    public synchronized void SetNuevoNumeroRecienCalculado(BigInteger NumeroCalculado, BigInteger ResultadoDelCalculo){
+
+    public synchronized void SetNuevoNumeroRecienCalculado(ArrayList<BigInteger> arrayNumbers){
         //aqui llenamos el hasMap Con los dos numero, el que hemos calculado y su resultado
-        NumerosCalculados.put(NumeroCalculado, ResultadoDelCalculo);
+        if(arrayNumbers != null){
+            for (int j = 0; j < arrayNumbers.size(); ++j) {
+                if(j != 0){
+                    NumerosCalculados.put( arrayNumbers.get(j-1), arrayNumbers.get(j) );
+                }
+            }
+            //Ademas comprobamos si esta secuendia es mas larga que la anterior, si es asi guardamos la secuencia
+            if(arrayNumbers.size() > CadenaMasLarga.size()){
+                CadenaMasLarga=arrayNumbers;
+            }
+        }
     }
+    
     public synchronized boolean EstaCalculado(BigInteger Numero){
         //aqui comprobamos por la key del hasmap si esta o no el numero calculado, si está debolvemos true sino false
         if(NumerosCalculados.containsKey(Numero)){
@@ -44,43 +49,24 @@ public class Datos_De_Uno_En_Uno {
         }
         return false;
     }
-    //Hashmap de Numero y longitud de cadena calculada
-    public synchronized void setLongitudCadena(BigInteger Bigi, int i){
-        //Guardamos en un hasmap el numero que hemos calculado(key) y la lognitud de su cadena(value)
-        LongitudesDeNuemrosCalculados.put(Bigi, i);
-    }
-    public int getLongiudCadena(BigInteger i){
-        //devolvemos la longitud del numero introducido el cual ya hemos calculado anteriormente y por tanto conocemos tambien la longitud de su cadena
-        int LongitudDeNumero = LongitudesDeNuemrosCalculados.get(i);
-        return LongitudDeNumero;
-    }
+    
     public int getLongiudCadenaMax(){
-        //devolvemos la longitud del numero introducido el cual ya hemos calculado anteriormente y por tanto conocemos tambien la longitud de su cadena
-        int MaxValue = 0;
-        Iterator it = LongitudesDeNuemrosCalculados.entrySet().iterator();
-        while(it.hasNext()){
-            HashMap.Entry<BigInteger,Integer> entry = (HashMap.Entry)it.next();
-            if(entry.getValue()>=MaxValue){
-                MaxValue = entry.getValue();
-            }else{
-                break;
-            }
-        }
-        return MaxValue;
+        return CadenaMasLarga.size();
     }
     
-    public boolean hasLongitud(BigInteger bigi){
-        if(LongitudesDeNuemrosCalculados.containsKey(bigi)){
-            return true;
+    public String getCadenaMasLargar(){
+        String Cadena = CadenaMasLarga.get(0) +": ";
+            for (int j = 0; j < CadenaMasLarga.size(); ++j) {
+            Cadena += CadenaMasLarga.get(j) + "-";            
         }
-        return false;
-        
+        return Cadena;
     }
     
     public BigInteger getNumMasAlto(){
         //Devolvemos el numero mas alto alcanzado
         return NumMasAlto;
     }
+    
     public synchronized void setNumMasAlto(BigInteger i){
         //Como hemos encontrado un numero mayor al que tenemos guardado lo sustituimos por el mas alto 
         NumMasAlto = i;
