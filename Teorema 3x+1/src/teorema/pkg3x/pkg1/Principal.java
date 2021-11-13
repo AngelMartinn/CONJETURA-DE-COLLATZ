@@ -22,14 +22,14 @@ public class Principal {
         
         if (Metodo==2) {
             creadorHilosRangos(NumHilos);
-        }else if(Metodo==1){
+        }else if (Metodo==1) {
             creadorHilosDe1En1(NumHilos);
             //Aqui hace todos los sout que pide el enunciado
         }
     }// main()
     
     private static void creadorHilosRangos(int numHilos) {
-        DatosRangos datos=new DatosRangos(Inicio, Fin, numHilos);
+        Datos datos=new Datos(Inicio, Fin, numHilos);
         Thread[] hilos=new Thread[numHilos];       
         for (int i = 0; i < hilos.length; ++i) {
             HiloRangos h = new HiloRangos(datos);
@@ -45,7 +45,7 @@ public class Principal {
         Long FinTiempo = System.currentTimeMillis();
         long TiempoEnEjecucion = FinTiempo - InicioTiempo;
         System.out.println("Tiempo de procesado: "+ TiempoEnEjecucion+" milisegundos");
-        datos.end();
+        datos.endRangos();
     }// creadorHilosRangos()
     
     private static void creadorHilosDe1En1(int numHilos){

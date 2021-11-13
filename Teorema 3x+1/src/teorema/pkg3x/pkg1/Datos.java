@@ -3,26 +3,19 @@ package teorema.pkg3x.pkg1;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-public class DatosRangos {
-    private BigInteger finINICIAL;
-    private BigInteger inicioRango;
-    private BigInteger finRango;
-    private int numHilos;
-    private int contadorHilos = 0;
-    private BigInteger reparto;
-    private BigInteger numMax=BigInteger.ZERO;
+public class Datos {
     private HashMap <BigInteger, BigInteger> calculados = new HashMap ();
     //Hace la misma funcion que el hashmap de repetidos en los hilos, se usa para
     //poder sacar la secuencia mas larga parando al llegar a un bucle
     //y para devolver el resto de la secuencia dado un numero ya calculado
     private HashMap <BigInteger, BigInteger> repetido = new HashMap ();
-    private int longitudSecuenciaMayor=0;
-    private BigInteger semillaSecuenciaMayor=BigInteger.ZERO;
-    private String secuenciaMayor="";
-    private boolean existeNuevoBucle = false;
-    private BigInteger semillaNuevoBucle=BigInteger.ZERO;
-            
-    public DatosRangos(BigInteger inicioRango, BigInteger finRango, int numHilos) {
+    
+    private BigInteger finINICIAL;
+    private BigInteger inicioRango;
+    private BigInteger finRango;
+    private BigInteger reparto;
+    private int numHilos;
+    public Datos (BigInteger inicioRango, BigInteger finRango, int numHilos) {
         this.inicioRango = inicioRango;
         this.finRango = finRango;
         finINICIAL=finRango;
@@ -31,14 +24,15 @@ public class DatosRangos {
         reparto = (finRango.subtract(inicioRango)).divide(BigInteger.valueOf(numHilos));
     }// DatosRangos()
 
+    private BigInteger numMax=BigInteger.ZERO;
     public BigInteger getNumMax() {
         return numMax;
     }
-
     public synchronized void setNumMax(BigInteger numMax) {
-            this.numMax = numMax;
+        this.numMax = numMax;
     }
     
+    private int contadorHilos = 0;
     public synchronized BigInteger pedirInicio(){
         //El hilo pide el inicio de su rango, synchronized porque cambio
         //el valor del inicio del rango para el siguiente hilo
@@ -70,11 +64,7 @@ public class DatosRangos {
     }// pedirFin()
     
     public boolean calculados(BigInteger calculado) {
-        if (calculados.get(calculado)!= null){
-            return true;
-        }else{
-            return false;
-        }
+        return calculados.get(calculado)!= null;
     }// calculados()
     
     public synchronized void actualizarCalculados(String secuencia) {
@@ -109,6 +99,9 @@ public class DatosRangos {
         return contExtra;
     }
     
+    private int longitudSecuenciaMayor=0;
+    private BigInteger semillaSecuenciaMayor=BigInteger.ZERO;
+    private String secuenciaMayor="";
     public synchronized void secuenciaMasLarga(BigInteger semilla, int tamanioSecuencia) {
         if (tamanioSecuencia>longitudSecuenciaMayor){
             semillaSecuenciaMayor=semilla;
@@ -116,12 +109,14 @@ public class DatosRangos {
         }
     }// secuenciaMasLarga()
     
+    private boolean existeNuevoBucle = false;
+    private BigInteger semillaNuevoBucle=BigInteger.ZERO;
     public synchronized void setBucle(boolean nuevoBucle, BigInteger semillaNuevoBucle){
         existeNuevoBucle=nuevoBucle;
         this.semillaNuevoBucle=semillaNuevoBucle;
     }
     
-    public void end(){
+    public void endRangos(){
         //Recorre el hashmap con comenzando por la semilla que da lugar a la mas larga
         BigInteger siguienteNum=semillaSecuenciaMayor;
         BigInteger numActual;
@@ -147,6 +142,6 @@ public class DatosRangos {
         if (!semillaNuevoBucle.equals(BigInteger.ZERO)){
             System.out.println("Generado por la semilla: "+semillaNuevoBucle);
         }
-    }// end()
+    }// endRangos()
     
-}// DatosRangos
+}// Datos

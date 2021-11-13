@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 public class HiloRangos implements Runnable {
-    private DatosRangos datos;
+    private Datos datos;
     private BigInteger inicioRango;
     private BigInteger finRango;
     //Para hacer la líneas de cáculo más cortas creo estas
@@ -19,7 +19,7 @@ public class HiloRangos implements Runnable {
     //String para mandar la secuencia completa de un numero tras haberla calculado
     private String secuencia="";
     
-    public HiloRangos(DatosRangos datos) {
+    public HiloRangos(Datos datos) {
         this.datos = datos;
     }
 
